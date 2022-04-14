@@ -1,9 +1,16 @@
+import json
 import math
-import time
 import random
-from tkinter import Tk, Canvas, Frame, BOTH, W
-import tkinter as tk
 import threading
+import time
+import tkinter as tk
+from tkinter import Canvas, Frame, BOTH
+import paho.mqtt.client as mqtt
+
+
+def onMessage(client, userdata, message):
+    str_msj: str = message.payload.decode('utf-8')
+    message = json.loads(str_msj)
 
 
 class SensorSimulator:
@@ -145,7 +152,21 @@ class DynamicDisplay(Frame):
         canvas.pack(fill=BOTH, expand=1)
 
 
-root = tk.Tk()
-ex = DynamicDisplay()
-root.geometry('650x500+0+0')
-root.mainloop()
+if __name__ == '__main__':
+    client_name = 'sens_sub'
+    broker = 'mqtt.eclipseprojects.io'
+
+    client = mqtt.Client(client_name)
+    client.connect(broker)
+
+    print('Subscription in process')
+    client.subscribe('group1')
+    client.on_message = onMessage
+    time.sleep(2)
+
+    client.loop_forever()
+
+    # root = tk.Tk()
+    # ex = DynamicDisplay()
+    # root.geometry('650x500+0+0')
+    # root.mainloop()
