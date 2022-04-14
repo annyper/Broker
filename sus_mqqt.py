@@ -11,6 +11,7 @@ import paho.mqtt.client as mqtt
 def onMessage(client, userdata, message):
     str_msj: str = message.payload.decode('utf-8')
     message = json.loads(str_msj)
+    print(message)
 
 
 class SensorSimulator:
@@ -160,13 +161,13 @@ if __name__ == '__main__':
     client.connect(broker)
 
     print('Subscription in process')
-    client.subscribe('group1')
+    client.subscribe('studentdata')
     client.on_message = onMessage
     time.sleep(2)
 
     client.loop_forever()
 
-    # root = tk.Tk()
-    # ex = DynamicDisplay()
-    # root.geometry('650x500+0+0')
+    root = tk.Tk()
+    ex = DynamicDisplay()
+    root.geometry('650x500+0+0')
     # root.mainloop()
